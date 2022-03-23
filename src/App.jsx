@@ -1,23 +1,26 @@
 import React from "react";
+import { ThemeProvider } from "styled-components";
+
+import Home from "Pages/Home";
 import "./App.css";
+import GlobalStyles from "./GlobalStyle";
+
+const theme = {
+  colors: {
+    schedule: "#4D96FF",
+    holiday: "#6BCB77",
+    today: "#FF6B6B",
+    primary: "#343a40",
+    secondary: "#adb5bd",
+  },
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <Home />
+    </ThemeProvider>
   );
 }
 
