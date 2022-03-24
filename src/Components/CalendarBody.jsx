@@ -3,16 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import { initCalendar } from "store/actions/calendar";
+import { DAYS } from "constants";
 
 const CalendarBody = () => {
-  const dispatch = useDispatch();
   const state = useSelector((state) => state.calendar);
 
-  useEffect(() => {
-    dispatch(initCalendar());
-  }, [dispatch]);
-
-  const { selectedMonth } = state;
+  const { selectedMonth, selectedYYYYMM } = state;
 
   function renderDatesInCalendar(startToSlice, endToSlice, index) {
     const TDs = Object.keys(selectedMonth)
@@ -21,9 +17,20 @@ const CalendarBody = () => {
         const month = YYYYMMDD.split("-")[1];
         const date = YYYYMMDD.split("-")[2];
 
+        const [selectedYYYY, selectedMM] = selectedYYYYMM.split("-");
+
         const dateForCalendar =
           date === "1" ? `${month}월 ${date}일` : `${date}일`;
-        return <TD key={YYYYMMDD}>{dateForCalendar}</TD>;
+
+        return (
+          <TD
+            key={YYYYMMDD}
+            date={YYYYMMDD}
+            isSelectedMonth={selectedMM == month}
+          >
+            {dateForCalendar}
+          </TD>
+        );
       });
 
     return <tr key={`${index}_week`}>{TDs}</tr>;
@@ -33,13 +40,9 @@ const CalendarBody = () => {
     <StyledTable>
       <THead>
         <TR>
-          <TH>일</TH>
-          <TH>월</TH>
-          <TH>화</TH>
-          <TH>수</TH>
-          <TH>목</TH>
-          <TH>금</TH>
-          <TH>토</TH>
+          {DAYS.map((day) => (
+            <TH key={day}>{day}</TH>
+          ))}
         </TR>
       </THead>
       <TBody>
@@ -75,6 +78,12 @@ export const TH = styled.th`
   // custom css goes here
   width: 100px;
   text-align: right;
+  font-weight: 600;
+  color: ${(props) => {
+    if (props.children === "일" || props.children === "토") {
+      return props.theme.colors.secondary;
+    }
+  }};
 `;
 
 export const TD = styled.td`
@@ -82,5 +91,28 @@ export const TD = styled.td`
   width: 100px;
   height: 100px;
   text-align: right;
+  font-weight: 600;
   border: 1px solid gray;
+  background: ${(props) => {
+    const { date } = props;
+    const [YYYY, MM, DD] = date.split("-");
+    const dateObj = new Date(YYYY, MM - 1, DD);
+
+    if (dateObj.getDay() === 0 || dateObj.getDay() === 6) {
+      return props.theme.colors.tertiary;
+    }
+  }};
+  color: ${(props) => {
+    const { date } = props;
+    const [YYYY, MM, DD] = date.split("-");
+    const dateObj = new Date(YYYY, MM - 1, DD);
+
+    if (!props.isSelectedMonth) {
+      return props.theme.colors.secondary;
+    }
+
+    if (dateObj.getDay() === 0 || dateObj.getDay() === 6) {
+      return props.theme.colors.secondary;
+    }
+  }};
 `;

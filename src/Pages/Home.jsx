@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import CalendarHeader from "Components/CalendarHeader";
 import CalendarBody from "Components/CalendarBody";
 
+import { initCalendar } from "store/actions/calendar";
+
 const Home = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initCalendar());
+  }, [dispatch]);
   return (
     <Wrapper>
       <CalendarHeader />

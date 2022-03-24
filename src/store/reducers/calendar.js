@@ -1,8 +1,14 @@
-import { INIT_CALENDAR, MOVE_CALENDAR } from "../actions/types";
+import {
+  INIT_CALENDAR,
+  MOVE_CALENDAR,
+  MOVE_CALENDAR_TO_LEFT,
+  MOVE_CALENDAR_TO_RIGHT,
+} from "../actions/types";
 
 import { initCalendar } from "store/actions/calendar";
 
 const INITIAL_STATE = {
+  selectedYYYYMM: "",
   prevMonth: {},
   selectedMonth: {},
   nextMonth: {},
@@ -12,6 +18,7 @@ const INITIAL_STATE = {
 const currentDate = new Date();
 
 function makeCalendar(dateObject) {
+  console.log(dateObject);
   const year = dateObject.getFullYear();
   const month = dateObject.getMonth();
 
@@ -52,15 +59,25 @@ function makeCalendar(dateObject) {
     result[YYYYMMDD] = [];
   });
 
-  for (let i = 1; i < 7 - TMLDay; i++) {
-    nextDates.push(i);
+  if (TMLDay !== 6) {
+    for (let i = 1; i < 7 - TMLDay; i++) {
+      nextDates.push(i);
+    }
   }
 
   if ([...prevDates, ...thisDates, ...nextDates].length === 35) {
     const copyOfNextDates = nextDates.slice();
     // 요구사항의 달력은 6줄이기에 마지막에 한 줄 더 추가하기 위한 작업
-    for (let i = 1; i < 8; i++) {
-      nextDates.push(copyOfNextDates[copyOfNextDates.length - 1] + i);
+    if (nextDates.length > 0) {
+      for (let i = 1; i < 8; i++) {
+        nextDates.push(copyOfNextDates[copyOfNextDates.length - 1] + i);
+      }
+    } else {
+      // 이전달의 마지막 날이 토요일인 경우 nextDates 배열은 비어있을 것이다.
+      // 그런 경우 그냥 1일부터 7일까지 넣어서 달력 마지막 한 줄을 더 추가해준다.
+      for (let i = 1; i < 8; i++) {
+        nextDates.push(i);
+      }
     }
   }
 
@@ -78,9 +95,49 @@ function makeCalendar(dateObject) {
 const calendar = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case INIT_CALENDAR: {
+      const currentYYYYMM = `${currentDate.getFullYear()}-${
+        currentDate.getMonth() + 1
+      }`;
+      const [currentYear, currentMonth] = currentYYYYMM.split("-");
+
       return {
         ...state,
+        prevMonth: makeCalendar(new Date(currentYear, currentMonth - 1, 0)),
         selectedMonth: makeCalendar(currentDate),
+        nextMonth: makeCalendar(new Date(currentYear, currentMonth)),
+        selectedYYYYMM: currentYYYYMM,
+      };
+    }
+    case MOVE_CALENDAR_TO_LEFT: {
+      // 현재 년월이 2022-3인 경우라면..
+      const [year, month] = state.selectedYYYYMM.split("-");
+      const prevMonthDate = new Date(year, month - 2); // 2022-2
+
+      // 다음달 혹은 그 이전달로 selectedYYYYMM(현재 유저가 보고 있는 월)을 업데이트 시
+      // 년도까지 바꾸는 경우가 있기에 단순히 월을 플러스 마이너스 1하는 것이 아니라
+      // Date 객체로 계산하여 업데이트되게 하였다.
+
+      return {
+        prevMonth: makeCalendar(new Date(year, month - 3)), // 2022-1
+        selectedMonth: { ...state.prevMonth }, // 2022-2
+        nextMonth: { ...state.selectedMonth }, // 2022-3
+        selectedYYYYMM: `${prevMonthDate.getFullYear()}-${
+          prevMonthDate.getMonth() + 1
+        }`, // 2022-2
+      };
+    }
+    case MOVE_CALENDAR_TO_RIGHT: {
+      // 현재 년월이 2022-3인 경우라면..
+      const [year, month] = state.selectedYYYYMM.split("-");
+      const nextMonthDate = new Date(year, month); // 2022-4
+
+      return {
+        prevMonth: { ...state.selectedMonth }, // 2022-3
+        selectedMonth: { ...state.nextMonth }, // 2022-4
+        nextMonth: makeCalendar(new Date(year, parseInt(month) + 1)), // 2022-5
+        selectedYYYYMM: `${nextMonthDate.getFullYear()}-${
+          nextMonthDate.getMonth() + 1
+        }`, // 2022-4
       };
     }
     default:

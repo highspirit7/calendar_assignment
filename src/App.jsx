@@ -12,6 +12,7 @@ const theme = {
     today: "#FF6B6B",
     primary: "#343a40",
     secondary: "#adb5bd",
+    tertiary: "#d6dade",
   },
 };
 
