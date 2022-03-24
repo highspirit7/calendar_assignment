@@ -14,23 +14,44 @@ const CalendarBody = () => {
     const TDs = Object.keys(selectedMonth)
       .slice(startToSlice, endToSlice)
       .map((YYYYMMDD) => {
-        const month = YYYYMMDD.split("-")[1];
-        const date = YYYYMMDD.split("-")[2];
+        let [year, month, date] = YYYYMMDD.split("-");
 
         const [selectedYYYY, selectedMM] = selectedYYYYMM.split("-");
+
+        const today = new Date();
+        const todayYYYYMMDD = `${today.getFullYear()}-${
+          today.getMonth() + 1
+        }-${today.getDate()}`;
+
+        date = YYYYMMDD === todayYYYYMMDD ? <Circle>{date}</Circle> : date;
 
         const dateForCalendar =
           date === "1" ? `${month}월 ${date}일` : `${date}일`;
 
-        return (
-          <TD
-            key={YYYYMMDD}
-            date={YYYYMMDD}
-            isSelectedMonth={selectedMM == month}
-          >
-            {dateForCalendar}
-          </TD>
-        );
+        if (date === "1") {
+          return (
+            <TD
+              key={YYYYMMDD}
+              date={YYYYMMDD}
+              isSelectedMonth={selectedMM == month}
+            >
+              <TextDate>
+                {month + "월 "}
+                {date}일
+              </TextDate>
+            </TD>
+          );
+        } else {
+          return (
+            <TD
+              key={YYYYMMDD}
+              date={YYYYMMDD}
+              isSelectedMonth={selectedMM == month}
+            >
+              <TextDate>{date}일</TextDate>
+            </TD>
+          );
+        }
       });
 
     return <tr key={`${index}_week`}>{TDs}</tr>;
@@ -86,10 +107,26 @@ export const TH = styled.th`
   }};
 `;
 
+export const Circle = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  text-align: center;
+  /* margin: 5px 20px; */
+  /* font-size: 15px; */
+  background: ${({ theme }) => theme.colors.today};
+  /* padding: 15px; */
+  height: 24px;
+  width: 24px;
+  color: #fff;
+`;
+
 export const TD = styled.td`
   // custom css goes here
   width: 100px;
   height: 100px;
+  padding-top: 4px;
   text-align: right;
   font-weight: 600;
   border: 1px solid gray;
@@ -115,4 +152,10 @@ export const TD = styled.td`
       return props.theme.colors.secondary;
     }
   }};
+`;
+
+const TextDate = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
