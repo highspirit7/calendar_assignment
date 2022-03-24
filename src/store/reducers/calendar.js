@@ -4,6 +4,9 @@ import {
   MOVE_CALENDAR_TO_LEFT,
   MOVE_CALENDAR_TO_RIGHT,
   MOVE_TO_TODAY,
+  GET_HOLIDAYS_REQUEST,
+  GET_HOLIDAYS_SUCCESS,
+  GET_HOLIDAYS_FAILURE,
 } from "../actions/types";
 
 import { initCalendar } from "store/actions/calendar";
@@ -159,6 +162,60 @@ const calendar = (state = INITIAL_STATE, action) => {
         nextMonth: makeCalendar(new Date(currentYear, currentMonth + 1)),
       };
     }
+    case GET_HOLIDAYS_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case GET_HOLIDAYS_SUCCESS: {
+      if (action.payload) {
+        const holidays = action.payload.map((data) => {
+          const locdate = data.locdate.toString();
+
+          const year = locdate.substring(0, 4);
+          const month = locdate.substring(4, 6);
+          const date = locdate.substring(7);
+
+          const dateObj = new Date(year, parseInt(month) - 1, date);
+          return {
+            ...data,
+            locdate: `${dateObj.getFullYear()}-${
+              dateObj.getMonth() + 1
+            }-${dateObj.getDate()}`,
+          };
+        });
+
+        const { selectedMonth } = state;
+
+        holidays.forEach((data) => {
+          const itemsOfDate = selectedMonth[data.locdate];
+          const isThereSameHolidayAlready = itemsOfDate.some(
+            (item) => item.name === data.dateName,
+          );
+
+          if (!isThereSameHolidayAlready) {
+            const id = itemsOfDate.length > 0 ? itemsOfDate[0].id + 1 : 1;
+            const holidayObj = {
+              id,
+              name: data.dateName,
+              isHoliday: data.isHoliday,
+              date: data.locdate,
+            };
+            selectedMonth[data.locdate].unshift(holidayObj);
+          }
+        });
+      }
+
+      return {
+        ...state,
+      };
+    }
+    case GET_HOLIDAYS_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+
     default:
       return state;
   }

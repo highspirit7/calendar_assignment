@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
+import { padLeadingZeros } from "utils";
 import {
   moveCalendarToLeft,
   moveCalendarToRight,
   moveToToday,
+  getHolidaysRequest,
 } from "store/actions/calendar";
 
 const CalendarHeader = () => {
@@ -23,10 +25,32 @@ const CalendarHeader = () => {
 
   const handleArrowButtonToLeft = () => {
     dispatch(moveCalendarToLeft());
+
+    const dateObj = new Date(selectedYYYY, selectedMM - 2);
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1;
+
+    dispatch(
+      getHolidaysRequest({
+        year,
+        month: month < 10 ? padLeadingZeros(month, 2) : month.toString(),
+      }),
+    );
   };
 
   const handleArrowButtonToRight = () => {
     dispatch(moveCalendarToRight());
+
+    const dateObj = new Date(selectedYYYY, selectedMM);
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1;
+
+    dispatch(
+      getHolidaysRequest({
+        year,
+        month: month < 10 ? padLeadingZeros(month, 2) : month.toString(),
+      }),
+    );
   };
 
   const handleTodayButton = () => {
