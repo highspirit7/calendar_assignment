@@ -26,6 +26,10 @@ const CalendarHeader = () => {
     dispatch(moveCalendarToRight());
   };
 
+  const handleTodayButton = () => {
+    dispatch(moveToToday());
+  };
+
   return (
     <StyledHeader>
       <h1>{` ${selectedYYYY}년 ${selectedMM}월 `}</h1>
@@ -33,7 +37,7 @@ const CalendarHeader = () => {
         <ArrowButton onClick={() => handleArrowButtonToLeft()}>
           <FontAwesomeIcon icon={faChevronLeft} />
         </ArrowButton>
-        <TodayButton>오늘</TodayButton>
+        <TodayButton onClick={() => handleTodayButton()}>오늘</TodayButton>
         <ArrowButton onClick={() => handleArrowButtonToRight()}>
           <FontAwesomeIcon icon={faChevronRight} />
         </ArrowButton>

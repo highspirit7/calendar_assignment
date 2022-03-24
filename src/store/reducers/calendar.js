@@ -3,6 +3,7 @@ import {
   MOVE_CALENDAR,
   MOVE_CALENDAR_TO_LEFT,
   MOVE_CALENDAR_TO_RIGHT,
+  MOVE_TO_TODAY,
 } from "../actions/types";
 
 import { initCalendar } from "store/actions/calendar";
@@ -100,12 +101,14 @@ const calendar = (state = INITIAL_STATE, action) => {
       }`;
       const [currentYear, currentMonth] = currentYYYYMM.split("-");
 
+      const currentMonthCalendar = makeCalendar(currentDate);
+
       return {
-        ...state,
-        prevMonth: makeCalendar(new Date(currentYear, currentMonth - 1, 0)),
-        selectedMonth: makeCalendar(currentDate),
-        nextMonth: makeCalendar(new Date(currentYear, currentMonth)),
         selectedYYYYMM: currentYYYYMM,
+        prevMonth: makeCalendar(new Date(currentYear, currentMonth - 1, 0)),
+        selectedMonth: currentMonthCalendar,
+        nextMonth: makeCalendar(new Date(currentYear, currentMonth)),
+        currentMonth: currentMonthCalendar,
       };
     }
     case MOVE_CALENDAR_TO_LEFT: {
@@ -118,6 +121,7 @@ const calendar = (state = INITIAL_STATE, action) => {
       // Date 객체로 계산하여 업데이트되게 하였다.
 
       return {
+        ...state,
         prevMonth: makeCalendar(new Date(year, month - 3)), // 2022-1
         selectedMonth: { ...state.prevMonth }, // 2022-2
         nextMonth: { ...state.selectedMonth }, // 2022-3
@@ -132,12 +136,25 @@ const calendar = (state = INITIAL_STATE, action) => {
       const nextMonthDate = new Date(year, month); // 2022-4
 
       return {
+        ...state,
         prevMonth: { ...state.selectedMonth }, // 2022-3
         selectedMonth: { ...state.nextMonth }, // 2022-4
         nextMonth: makeCalendar(new Date(year, parseInt(month) + 1)), // 2022-5
         selectedYYYYMM: `${nextMonthDate.getFullYear()}-${
           nextMonthDate.getMonth() + 1
         }`, // 2022-4
+      };
+    }
+    case MOVE_TO_TODAY: {
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth();
+
+      return {
+        ...state,
+        selectedYYYYMM: `${currentYear}-${currentMonth + 1}`,
+        prevMonth: makeCalendar(new Date(currentYear, currentMonth - 1)),
+        selectedMonth: { ...state.currentMonth },
+        nextMonth: makeCalendar(new Date(currentYear, currentMonth + 1)),
       };
     }
     default:
