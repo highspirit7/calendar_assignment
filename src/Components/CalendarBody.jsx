@@ -129,7 +129,8 @@ export const TD = styled.td`
   padding-top: 4px;
   text-align: right;
   font-weight: 600;
-  border: 1px solid gray;
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.colors.secondary};
   background: ${(props) => {
     const { date } = props;
     const [YYYY, MM, DD] = date.split("-");
