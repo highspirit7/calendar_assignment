@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   selectedMonth: {},
   nextMonth: {},
   currentMonth: {},
+  isTodayBtnClicked: false,
 };
 
 const currentDate = new Date();
@@ -151,6 +152,7 @@ const calendar = (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
+        isTodayBtnClicked: true,
         selectedYYYYMM: `${currentYear}-${currentMonth + 1}`,
         prevMonth: makeCalendar(new Date(currentYear, currentMonth - 1)),
         selectedMonth: { ...state.currentMonth },

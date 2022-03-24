@@ -8,7 +8,7 @@ import { DAYS } from "constants";
 const CalendarBody = () => {
   const state = useSelector((state) => state.calendar);
 
-  const { selectedMonth, selectedYYYYMM } = state;
+  const { selectedMonth, selectedYYYYMM, isTodayBtnClicked } = state;
 
   function renderDatesInCalendar(startToSlice, endToSlice, index) {
     const TDs = Object.keys(selectedMonth)
@@ -23,7 +23,12 @@ const CalendarBody = () => {
           today.getMonth() + 1
         }-${today.getDate()}`;
 
-        date = YYYYMMDD === todayYYYYMMDD ? <Circle>{date}</Circle> : date;
+        date =
+          YYYYMMDD === todayYYYYMMDD && isTodayBtnClicked ? (
+            <Circle>{date}</Circle>
+          ) : (
+            date
+          );
 
         const dateForCalendar =
           date === "1" ? `${month}월 ${date}일` : `${date}일`;
