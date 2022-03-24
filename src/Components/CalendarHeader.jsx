@@ -18,6 +18,9 @@ const CalendarHeader = () => {
   const { selectedYYYYMM } = state;
   const [selectedYYYY, selectedMM] = selectedYYYYMM.split("-");
 
+  const selectedYYYYMMInHeader =
+    selectedYYYY && selectedMM ? `${selectedYYYY}년 ${selectedMM}월` : "";
+
   const handleArrowButtonToLeft = () => {
     dispatch(moveCalendarToLeft());
   };
@@ -32,7 +35,7 @@ const CalendarHeader = () => {
 
   return (
     <StyledHeader>
-      <h1>{` ${selectedYYYY}년 ${selectedMM}월 `}</h1>
+      <h1>{selectedYYYYMMInHeader}</h1>
       <div>
         <ArrowButton onClick={() => handleArrowButtonToLeft()}>
           <FontAwesomeIcon icon={faChevronLeft} />
