@@ -2,8 +2,9 @@ import React from "react";
 import { ThemeProvider } from "styled-components";
 
 import Home from "Pages/Home";
-import "./App.css";
 import GlobalStyles from "./GlobalStyle";
+
+import "antd/dist/antd.css";
 
 const theme = {
   colors: {

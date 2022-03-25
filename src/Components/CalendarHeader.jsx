@@ -94,6 +94,11 @@ const ArrowButton = styled.button`
   border-radius: 8px;
   background-color: white;
   cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.tertiary};
+  }
 `;
 
 const TodayButton = styled.button`
@@ -104,4 +109,9 @@ const TodayButton = styled.button`
   border-radius: 8px;
   background-color: white;
   cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.tertiary};
+  }
 `;

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import CalendarHeader from "Components/CalendarHeader";
 import CalendarBody from "Components/CalendarBody";
 import { padLeadingZeros } from "utils";
+
 import { initCalendar, getHolidaysRequest } from "store/actions/calendar";
 
 const Home = () => {

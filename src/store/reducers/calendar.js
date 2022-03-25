@@ -7,9 +7,10 @@ import {
   GET_HOLIDAYS_REQUEST,
   GET_HOLIDAYS_SUCCESS,
   GET_HOLIDAYS_FAILURE,
+  ADD_SCHEDULE,
+  DELETE_SCHEDULE,
 } from "../actions/types";
 
-import { initCalendar } from "store/actions/calendar";
 import { addHyphenToDate } from "utils";
 
 const INITIAL_STATE = {
@@ -189,9 +190,8 @@ const calendar = (state = INITIAL_STATE, action) => {
             );
 
             if (!isThereSameHolidayAlready) {
-              const id = itemsOfDate.length > 0 ? itemsOfDate[0].id + 1 : 1;
               const holidayObj = {
-                id,
+                id: 1,
                 name: data.dateName,
                 isHoliday: data.isHoliday,
                 date: data.locdate,
@@ -205,9 +205,9 @@ const calendar = (state = INITIAL_STATE, action) => {
           data.locdate = addHyphenToDate(data.locdate.toString());
 
           const itemsOfDate = selectedMonth[data.locdate];
-          const id = itemsOfDate.length > 0 ? itemsOfDate[0].id + 1 : 1;
+
           const holidayObj = {
-            id,
+            id: 1,
             name: data.dateName,
             isHoliday: data.isHoliday,
             date: data.locdate,
@@ -226,7 +226,39 @@ const calendar = (state = INITIAL_STATE, action) => {
         ...state,
       };
     }
+    case ADD_SCHEDULE: {
+      const { selectedMonth } = state;
 
+      const { name, date } = action.data;
+      const itemsOfDate = selectedMonth[date];
+      const id =
+        itemsOfDate.length > 0 ? itemsOfDate[itemsOfDate.length - 1].id + 1 : 1;
+
+      const scheduleObj = {
+        id,
+        name,
+        date,
+        isHoliday: "N",
+      };
+
+      selectedMonth[date].push(scheduleObj);
+
+      return {
+        ...state,
+      };
+    }
+    case DELETE_SCHEDULE: {
+      const { selectedMonth } = state;
+
+      const { scheduleId, date } = action.data;
+      const itemsOfDateAfterDelete = selectedMonth[date].filter(
+        (item) => item.id !== scheduleId,
+      );
+
+      selectedMonth[date] = itemsOfDateAfterDelete;
+
+      return { ...state };
+    }
     default:
       return state;
   }

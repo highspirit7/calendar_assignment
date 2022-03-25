@@ -6,6 +6,8 @@ import {
   GET_HOLIDAYS_REQUEST,
   GET_HOLIDAYS_SUCCESS,
   GET_HOLIDAYS_FAILURE,
+  ADD_SCHEDULE,
+  DELETE_SCHEDULE,
 } from "./types";
 
 export const initCalendar = () => ({
@@ -37,4 +39,14 @@ export const getHolidaysSuccess = (data) => ({
 export const getHolidaysFailure = (message) => ({
   type: GET_HOLIDAYS_FAILURE,
   message,
+});
+
+export const addSchedule = (data) => ({
+  type: ADD_SCHEDULE,
+  data,
+});
+
+export const deleteSchedule = (data) => ({
+  type: DELETE_SCHEDULE,
+  data,
 });
