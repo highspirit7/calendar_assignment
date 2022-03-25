@@ -1,10 +1,10 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 
+import "./App.css";
+
 import Home from "Pages/Home";
 import GlobalStyles from "./GlobalStyle";
-
-import "antd/dist/antd.css";
 
 const theme = {
   colors: {
