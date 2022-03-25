@@ -258,6 +258,7 @@ export const TD = styled.td`
   width: 150px;
   height: 100px;
   padding: 4px;
+  padding-top: 2px;
   text-align: right;
   font-weight: 600;
   border: 1px solid;
@@ -291,6 +292,7 @@ const TextDate = styled.div`
   justify-content: flex-end;
   align-items: center;
   cursor: pointer;
+  line-height: 24px;
 
   &:hover {
     border-radius: 4px;
