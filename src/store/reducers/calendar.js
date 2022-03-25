@@ -10,6 +10,7 @@ import {
 } from "../actions/types";
 
 import { initCalendar } from "store/actions/calendar";
+import { addHyphenToDate } from "utils";
 
 const INITIAL_STATE = {
   selectedYYYYMM: "",
@@ -168,42 +169,52 @@ const calendar = (state = INITIAL_STATE, action) => {
       };
     }
     case GET_HOLIDAYS_SUCCESS: {
+      const { selectedMonth } = state;
+
       if (action.payload) {
-        const holidays = action.payload.map((data) => {
-          const locdate = data.locdate.toString();
+        if (Array.isArray(action.payload)) {
+          const holidays = action.payload.map((data) => {
+            const locdate = data.locdate.toString();
 
-          const year = locdate.substring(0, 4);
-          const month = locdate.substring(4, 6);
-          const date = locdate.substring(7);
-
-          const dateObj = new Date(year, parseInt(month) - 1, date);
-          return {
-            ...data,
-            locdate: `${dateObj.getFullYear()}-${
-              dateObj.getMonth() + 1
-            }-${dateObj.getDate()}`,
-          };
-        });
-
-        const { selectedMonth } = state;
-
-        holidays.forEach((data) => {
-          const itemsOfDate = selectedMonth[data.locdate];
-          const isThereSameHolidayAlready = itemsOfDate.some(
-            (item) => item.name === data.dateName,
-          );
-
-          if (!isThereSameHolidayAlready) {
-            const id = itemsOfDate.length > 0 ? itemsOfDate[0].id + 1 : 1;
-            const holidayObj = {
-              id,
-              name: data.dateName,
-              isHoliday: data.isHoliday,
-              date: data.locdate,
+            return {
+              ...data,
+              locdate: addHyphenToDate(locdate),
             };
-            selectedMonth[data.locdate].unshift(holidayObj);
-          }
-        });
+          });
+
+          holidays.forEach((data) => {
+            const itemsOfDate = selectedMonth[data.locdate];
+            const isThereSameHolidayAlready = itemsOfDate.some(
+              (item) => item.name === data.dateName,
+            );
+
+            if (!isThereSameHolidayAlready) {
+              const id = itemsOfDate.length > 0 ? itemsOfDate[0].id + 1 : 1;
+              const holidayObj = {
+                id,
+                name: data.dateName,
+                isHoliday: data.isHoliday,
+                date: data.locdate,
+              };
+              selectedMonth[data.locdate].unshift(holidayObj);
+            }
+          });
+        } else {
+          // 공휴일이 하나일 때는 객체 형태로 전달받는다.
+          const data = action.payload;
+          data.locdate = addHyphenToDate(data.locdate.toString());
+
+          const itemsOfDate = selectedMonth[data.locdate];
+          const id = itemsOfDate.length > 0 ? itemsOfDate[0].id + 1 : 1;
+          const holidayObj = {
+            id,
+            name: data.dateName,
+            isHoliday: data.isHoliday,
+            date: data.locdate,
+          };
+
+          selectedMonth[data.locdate].unshift(holidayObj);
+        }
       }
 
       return {

@@ -44,6 +44,13 @@ const CalendarBody = () => {
                 {month + "월 "}
                 {date}일
               </TextDate>
+              {selectedMonth[YYYYMMDD].map((item) => {
+                return (
+                  <Holiday key={`${item.name}_ID${item.id}`}>
+                    {item.name}
+                  </Holiday>
+                );
+              })}
             </TD>
           );
         } else {
@@ -54,6 +61,13 @@ const CalendarBody = () => {
               isSelectedMonth={selectedMM == month}
             >
               <TextDate>{date}일</TextDate>
+              {selectedMonth[YYYYMMDD].map((item) => {
+                return (
+                  <Holiday key={`${item.name}_ID${item.id}`}>
+                    {item.name}
+                  </Holiday>
+                );
+              })}
             </TD>
           );
         }
@@ -131,7 +145,7 @@ export const TD = styled.td`
   // custom css goes here
   width: 100px;
   height: 100px;
-  padding-top: 4px;
+  padding: 4px;
   text-align: right;
   font-weight: 600;
   border: 1px solid;
@@ -164,4 +178,14 @@ const TextDate = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+`;
+
+const Holiday = styled.div`
+  text-align: left;
+  padding: 1px 6px;
+  margin: 2px;
+  font-size: 14px;
+  background: ${({ theme }) => theme.colors.holiday};
+  border-radius: 4px;
+  color: ${({ theme }) => theme.colors.primary};
 `;
