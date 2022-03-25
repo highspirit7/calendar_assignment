@@ -11,7 +11,7 @@ import {
   DELETE_SCHEDULE,
 } from "../actions/types";
 
-import { addHyphenToDate } from "utils";
+import { trimAndHyphenToDate } from "utils";
 
 const INITIAL_STATE = {
   selectedYYYYMM: "",
@@ -179,7 +179,7 @@ const calendar = (state = INITIAL_STATE, action) => {
 
             return {
               ...data,
-              locdate: addHyphenToDate(locdate),
+              locdate: trimAndHyphenToDate(locdate),
             };
           });
 
@@ -202,7 +202,7 @@ const calendar = (state = INITIAL_STATE, action) => {
         } else {
           // 공휴일이 하나일 때는 객체 형태로 전달받는다.
           const data = action.payload;
-          data.locdate = addHyphenToDate(data.locdate.toString());
+          data.locdate = trimAndHyphenToDate(data.locdate.toString());
 
           const itemsOfDate = selectedMonth[data.locdate];
 

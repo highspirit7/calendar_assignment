@@ -12,3 +12,5 @@ export const CLOSE_MODAL_TO_ADD_SCHEDULE = "close_modal_to_add_schedule";
 
 export const ADD_SCHEDULE = "add_schedule";
 export const DELETE_SCHEDULE = "delete_schedule";
+
+export const SET_DATE_FOR_MODAL = "set_date_for_modal";

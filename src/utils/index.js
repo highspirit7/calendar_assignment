@@ -4,7 +4,7 @@ export function padLeadingZeros(num, size) {
   return s;
 }
 
-export function addHyphenToDate(yyyymmdd) {
+export function trimAndHyphenToDate(yyyymmdd) {
   const year = yyyymmdd.substring(0, 4);
   const month = yyyymmdd.substring(4, 6);
   const date = yyyymmdd.substring(6);
