@@ -12,7 +12,14 @@ import {
   showModalToAddSchedule,
   closeModalToAddSchedule,
 } from "store/actions/modal";
-import { DAYS } from "constants";
+import {
+  DAYS,
+  SCHEDULE_MODAL_INPUT_PLACEHOLDER,
+  SCHEDULE_MODAL_GUIDE_INFO,
+  QUESTION_TO_DELETE_SCHEDULE,
+  MSG_AFTER_ADD_SCHEDULE,
+  MSG_AFTER_DELETE_SCHEDULE,
+} from "constants";
 
 const CalendarBody = () => {
   const dispatch = useDispatch();
@@ -44,7 +51,7 @@ const CalendarBody = () => {
       addSchedule({ name: scheduleNameForModal, date: scheduleDateForModal }),
     );
 
-    message.success("성공적으로 스케줄을 추가하였습니다");
+    message.success(MSG_AFTER_ADD_SCHEDULE);
 
     dispatch(closeModalToAddSchedule());
   };
@@ -56,7 +63,7 @@ const CalendarBody = () => {
   const handleConfirmToDeleteSchedule = (data) => {
     dispatch(deleteSchedule(data));
 
-    message.success("성공적으로 스케줄을 삭제하였습니다");
+    message.success(MSG_AFTER_DELETE_SCHEDULE);
   };
 
   function changeDateFormatInKorean(yyyymmdd) {
@@ -109,7 +116,7 @@ const CalendarBody = () => {
                 } else {
                   return (
                     <Popconfirm
-                      title="이 스케줄을 삭제하시겠습니까?"
+                      title={QUESTION_TO_DELETE_SCHEDULE}
                       placement="right"
                       onConfirm={() =>
                         handleConfirmToDeleteSchedule({
@@ -198,9 +205,10 @@ const CalendarBody = () => {
         <Input
           onChange={onChangeScheduleName}
           value={scheduleNameForModal}
-          placeholder="스케줄 이름을 입력하세요"
+          placeholder={SCHEDULE_MODAL_INPUT_PLACEHOLDER}
           maxLength={18}
         />
+        <GuideInfo>{SCHEDULE_MODAL_GUIDE_INFO}</GuideInfo>
       </Modal>
     </>
   );
@@ -209,13 +217,11 @@ const CalendarBody = () => {
 export default CalendarBody;
 
 export const StyledTable = styled.table`
-  // custom css goes here
   color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const THead = styled.thead`
   // custom css goes here
-  /* color: ${({ theme }) => theme.colors.secondary}; */
 `;
 
 export const TBody = styled.tbody`
@@ -227,7 +233,6 @@ export const TR = styled.tr`
 `;
 
 export const TH = styled.th`
-  // custom css goes here
   width: 100px;
   text-align: right;
   font-weight: 600;
@@ -244,17 +249,13 @@ export const Circle = styled.span`
   align-items: center;
   border-radius: 100%;
   text-align: center;
-  /* margin: 5px 20px; */
-  /* font-size: 15px; */
   background: ${({ theme }) => theme.colors.today};
-  /* padding: 15px; */
   height: 24px;
   width: 24px;
   color: #fff;
 `;
 
 export const TD = styled.td`
-  // custom css goes here
   width: 150px;
   height: 100px;
   padding: 4px;
@@ -319,4 +320,9 @@ const Schedule = styled.div`
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
+`;
+
+const GuideInfo = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.today};
 `;
